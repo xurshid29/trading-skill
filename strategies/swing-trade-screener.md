@@ -157,18 +157,24 @@ Apply tiered criteria:
 
 ### Step 4: News Check (CRITICAL)
 
-**Important: Only check news for final 9-12 candidates after filtering by pattern and ownership.**
+**Important: Select ~15-18 candidates (5-6 per category) before news check to have buffer for replacements.**
 
 ```bash
 # Check news in small batches (3-5 tickers at a time) to avoid rate limiting
 # Batch 1
-for ticker in TICK1 TICK2 TICK3; do
+for ticker in TICK1 TICK2 TICK3 TICK4 TICK5; do
   echo "=== $ticker ===" && curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=$ticker&auth=$FINVIZ_API_TOKEN" | head -10
   sleep 1
 done
 
-# Batch 2 (after reviewing batch 1)
-for ticker in TICK4 TICK5 TICK6; do
+# Batch 2 (wait a few seconds, then continue)
+for ticker in TICK6 TICK7 TICK8 TICK9 TICK10; do
+  echo "=== $ticker ===" && curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=$ticker&auth=$FINVIZ_API_TOKEN" | head -10
+  sleep 1
+done
+
+# Batch 3 (remaining candidates)
+for ticker in TICK11 TICK12 TICK13 TICK14 TICK15; do
   echo "=== $ticker ===" && curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=$ticker&auth=$FINVIZ_API_TOKEN" | head -10
   sleep 1
 done
@@ -179,6 +185,8 @@ done
 https://www.benzinga.com/quote/TICKER/news
 ```
 Use WebFetch tool to retrieve and analyze news headlines from Benzinga (one ticker at a time).
+
+**After news check:** Remove candidates with red flags, select best 9-12 from remaining clean candidates.
 
 **Red Flags to Avoid:**
 - Analyst downgrades
