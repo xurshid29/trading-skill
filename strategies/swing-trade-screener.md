@@ -7,7 +7,7 @@
 | **Position** | Long only |
 | **Hold Time** | 2-3 days |
 | **Timeframe** | 4H - 1D |
-| **Target Stocks** | ~10 candidates |
+| **Final Output** | 6-7 top picks (3-4 BUY + 3 WATCH) |
 
 ## Screening Criteria
 
@@ -128,12 +128,23 @@ curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=TICKER&auth=$FINVIZ_API
 - Insider buying
 - Industry tailwinds
 
-### Step 5: Final Selection
-Narrow down to 3-4 stocks with:
-- Best risk/reward setup
-- Cleanest charts (consolidation or early reversal)
-- No negative news catalysts
-- Highest institutional conviction
+### Step 5: Final Selection (6-7 Picks)
+
+**BUY Category (3-4 stocks):**
+All criteria pass:
+- RSI 40-60 ✅
+- SMA20/50 within ±5% ✅
+- 52W High >5% below ✅
+- Short Ratio <5 days ✅
+- Insider Trans not negative ✅
+- News clear ✅
+
+**WATCH Category (3 stocks):**
+Most criteria pass with minor flags:
+- RSI 60-70 (slightly high)
+- OR Short Ratio 5-6 days (slightly over)
+- OR minor analyst concern
+- Still tradeable with smaller position size
 
 ---
 
