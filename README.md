@@ -1,43 +1,34 @@
-# Finviz Trading Skill
+# Trading Skill
 
-A [Claude Code](https://claude.ai/code) skill for scanning and analyzing stocks using the [Finviz Elite](https://finviz.com/elite.ashx) API.
+A [Claude Code](https://claude.ai/code) skill for stock market analysis and trading decisions.
 
-## Features
+## Supported APIs
 
-- **Screen Stocks** - Filter by sector, fundamentals, technicals, ownership
-- **Price History** - Historical OHLCV data for any ticker
-- **SEC Filings** - Latest 10-K, 10-Q, 8-K filings
-- **Market News** - Latest news from major financial sources
-
-## Requirements
-
-- [Claude Code](https://claude.ai/code) CLI
-- Finviz Elite subscription with API access
+| API | Features | Status |
+|-----|----------|--------|
+| [Finviz Elite](https://finviz.com/elite.ashx) | Screening, quotes, SEC filings, news | ✅ Ready |
+| *More coming soon* | | |
 
 ## Installation
 
-### As a Skill (recommended)
+### Personal (recommended)
 
 ```bash
-# Clone to your personal skills directory
-git clone https://github.com/YOUR_USERNAME/finviz-trading-skill.git ~/.claude/skills/finviz-trading
-
-# Or symlink if you have a local copy
-ln -s /path/to/trading ~/.claude/skills/finviz-trading
+git clone git@github.com:xurshid29/trading-skill.git ~/.claude/skills/trading
 ```
 
 ### Project-level
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/finviz-trading-skill.git .claude/skills/finviz-trading
+git clone git@github.com:xurshid29/trading-skill.git .claude/skills/trading
 ```
 
 ## Setup
 
-Set your Finviz API token as an environment variable:
+Set API tokens as environment variables (add to `~/.zshrc` or `~/.bashrc`):
 
 ```bash
-# Add to ~/.zshrc or ~/.bashrc
+# Finviz Elite
 export FINVIZ_API_TOKEN="your-token-here"
 ```
 
@@ -53,8 +44,10 @@ Once installed, Claude will automatically use this skill when you ask:
 
 ## Documentation
 
-- [SKILL.md](SKILL.md) - Skill definition (required by Claude Code)
-- [docs/finviz-api.md](docs/finviz-api.md) - Complete API reference
+| File | Description |
+|------|-------------|
+| [SKILL.md](SKILL.md) | Skill definition (required by Claude Code) |
+| [docs/finviz-api.md](docs/finviz-api.md) | Finviz API reference |
 
 ## Structure
 
@@ -62,7 +55,7 @@ Once installed, Claude will automatically use this skill when you ask:
 ├── SKILL.md              # Claude Code skill definition
 ├── CLAUDE.md             # Project guidance for Claude
 ├── docs/
-│   └── finviz-api.md     # Full API documentation
+│   └── finviz-api.md     # Finviz API documentation
 └── resources/
     └── finviz/           # Saved HTML references
 ```

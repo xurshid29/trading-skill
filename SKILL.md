@@ -1,41 +1,46 @@
 ---
-name: finviz-trading
-description: Scan and analyze stocks using Finviz Elite API. Use when screening stocks, checking quotes, getting price history, analyzing SEC filings, or reviewing market news for trading decisions.
+name: trading
+description: Stock market analysis and trading assistant. Use when screening stocks, checking quotes, analyzing fundamentals/technicals, reviewing SEC filings, getting market news, or making trading decisions.
 allowed-tools: Read, Bash(curl:*)
 ---
 
-# Finviz Trading Assistant
+# Trading Skill
 
-A skill for scanning and analyzing stocks using the Finviz Elite API.
+A comprehensive skill for stock market analysis and trading decisions.
 
-## Setup
+## Available APIs
 
-Set your API token as an environment variable:
-
-```bash
-export FINVIZ_API_TOKEN="your-token-here"
-```
+### Finviz Elite
+Stock screening, quotes, SEC filings, and news.
+- **Docs**: [docs/finviz-api.md](docs/finviz-api.md)
+- **Token**: `export FINVIZ_API_TOKEN="your-token"`
 
 ## Capabilities
 
-1. **Screen Stocks** - Filter by sector, fundamentals, technicals, ownership
-2. **Get Price History** - Historical OHLCV data for any ticker
-3. **SEC Filings** - Latest 10-K, 10-Q, 8-K filings
-4. **Market News** - Latest news from major financial sources
+### Finviz
+- **Screen Stocks** - Filter by sector, fundamentals, technicals, ownership
+- **Price History** - Historical OHLCV data for any ticker
+- **SEC Filings** - Latest 10-K, 10-Q, 8-K filings
+- **Market News** - Latest news from major financial sources
 
-## API Endpoints
+## Quick Reference
 
-| API | Endpoint |
-|-----|----------|
-| Screener | `export.ashx?v={view}&f={filters}` |
-| Quote History | `quote_export.ashx?t={ticker}&p=d` |
-| SEC Filings | `export/latest-filings?t={ticker}&o=-filingDate` |
-| News | `news_export.ashx?v=1` |
+### Screen Stocks (Finviz)
+```bash
+curl -s "https://elite.finviz.com/export.ashx?v=111&f=sec_technology,cap_largeover&auth=$FINVIZ_API_TOKEN"
+```
 
-Base URL: `https://elite.finviz.com/`
+### Price History (Finviz)
+```bash
+curl -s "https://elite.finviz.com/quote_export.ashx?t=AAPL&p=d&auth=$FINVIZ_API_TOKEN"
+```
 
-All endpoints require `&auth=$FINVIZ_API_TOKEN`
+### SEC Filings (Finviz)
+```bash
+curl -s "https://elite.finviz.com/export/latest-filings?t=AAPL&o=-filingDate&auth=$FINVIZ_API_TOKEN"
+```
 
-## Full Documentation
-
-See [docs/finviz-api.md](docs/finviz-api.md) for complete API reference with all filter codes.
+### News (Finviz)
+```bash
+curl -s "https://elite.finviz.com/news_export.ashx?v=1&auth=$FINVIZ_API_TOKEN"
+```

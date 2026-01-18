@@ -18,7 +18,9 @@ A stock analyzing tool using Finviz Elite API for scanning, analyzing stocks, qu
 This repo is a Claude Code skill. To use it globally:
 
 ```bash
-ln -s /Users/khurshidyalgashev/workspace/trading ~/.claude/skills/finviz-trading
+ln -s /path/to/trading ~/.claude/skills/trading
+# or
+git clone git@github.com:xurshid29/trading-skill.git ~/.claude/skills/trading
 ```
 
 ## Environment Setup
