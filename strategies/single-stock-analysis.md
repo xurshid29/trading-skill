@@ -64,11 +64,11 @@ curl -s "https://elite.finviz.com/quote_export.ashx?t=TICKER&p=d&auth=$FINVIZ_AP
 curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=TICKER&auth=$FINVIZ_API_TOKEN" | head -20
 ```
 
-**Fallback: Benzinga** (if Finviz rate limited)
+**Fallback: Barchart** (if Finviz rate limited)
 ```
-https://www.benzinga.com/quote/TICKER/news
+https://www.barchart.com/stocks/quotes/TICKER/news
 ```
-Use WebFetch tool to retrieve and analyze news from Benzinga.
+Use WebFetch tool to retrieve and analyze news from Barchart.
 
 ### Step 6: SEC Filings (Optional)
 ```bash
