@@ -2,19 +2,20 @@
 
 Use this template when you have a specific ticker and want to evaluate it for a swing trade entry.
 
+**Note:** When analyzing a specific stock, the price is already accepted by the user. Focus on technical setup, institutional support, and news - not price range.
+
 ## Quick Criteria Check
 
 | Criteria | Target | Status |
 |----------|--------|--------|
-| Price | $30 - $40 | |
-| Daily Change | 3-5% | |
+| Daily Change | 3-5% (momentum, not overextended) | |
 | Institutional Ownership | > 50% | |
 | Institutional Transactions | Positive | |
 | Average Volume | > 500K | |
 | Market Cap | Mid cap+ | |
-| RSI | 40-60 | |
-| vs SMA20 | -5% to +5% | |
-| Beta | < 1.5 | |
+| RSI | 40-60 (not overbought) | |
+| vs SMA20 | -5% to +5% (not extended) | |
+| Beta | < 1.5 (manageable risk) | |
 | Breaking News | None negative | |
 | Earnings | Not within 3 days | |
 
@@ -62,8 +63,7 @@ curl -s "https://elite.finviz.com/export/latest-filings?t=TICKER&o=-filingDate&a
 
 ## Evaluation Checklist
 
-### Price & Volume
-- [ ] Price in $30-40 range
+### Volume & Liquidity
 - [ ] Daily change 3-5% (momentum without overextension)
 - [ ] Volume above 500K average (liquidity)
 - [ ] Mid cap or higher (stability)
@@ -127,7 +127,7 @@ curl -s "https://elite.finviz.com/export/latest-filings?t=TICKER&o=-filingDate&a
 
 ### BUY Signal
 All criteria met:
-- Price, volume, market cap ✅
+- Volume, market cap ✅
 - Institutional support ✅
 - Technical setup (consolidation/pullback/early reversal) ✅
 - News clear ✅
@@ -141,7 +141,6 @@ Most criteria met but:
 
 ### SKIP Signal
 Any of these:
-- Price outside $30-40 range
 - Institutional ownership < 50%
 - RSI > 70 (overbought)
 - Extended uptrend (> 10% above SMA20)
@@ -174,7 +173,7 @@ If decision is **BUY**:
 ### Summary
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| Price | $XX.XX | $30-40 | ✅/❌ |
+| Price | $XX.XX | - | - |
 | Change | +X.XX% | 3-5% | ✅/❌ |
 | Volume | X.XM | >500K | ✅/❌ |
 | Inst Own | XX% | >50% | ✅/❌ |

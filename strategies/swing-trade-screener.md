@@ -12,7 +12,7 @@
 ## Screening Criteria
 
 ### Price & Volume
-- **Price Range**: $30 - $40
+- **Price Range**: Configurable (e.g., $10-20, $20-30, $30-40, $40-50)
 - **Daily Change**: 3-5% (showing momentum)
 - **Average Volume**: > 500K (liquidity)
 - **Market Cap**: Mid cap or higher
@@ -119,7 +119,7 @@ Narrow down to 3-4 stocks with:
 
 | Criteria | Ideal Range | Why |
 |----------|-------------|-----|
-| Price | $30-40 | Affordable, liquid |
+| Price | User-defined range | Configurable per scan |
 | Daily Change | 3-5% | Shows momentum, not overextended |
 | RSI | 40-60 | Room to run, not overbought |
 | vs SMA20 | -5% to +5% | Near support/resistance |
