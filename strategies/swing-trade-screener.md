@@ -157,9 +157,15 @@ Apply tiered criteria:
 
 ### Step 4: News Check (CRITICAL)
 ```bash
-# Check each ticker for breaking news
+# Check each ticker for breaking news (Finviz)
 curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=TICKER&auth=$FINVIZ_API_TOKEN" | head -15
 ```
+
+**Fallback: Benzinga** (if Finviz rate limited)
+```
+https://www.benzinga.com/quote/TICKER/news
+```
+Use WebFetch tool to retrieve and analyze news from Benzinga.
 
 **Red Flags to Avoid:**
 - Analyst downgrades
