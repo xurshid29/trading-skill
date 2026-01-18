@@ -161,11 +161,11 @@ Apply tiered criteria:
 curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=TICKER&auth=$FINVIZ_API_TOKEN" | head -15
 ```
 
-**Fallback: Barchart** (if Finviz rate limited)
+**Fallback: Benzinga** (if Finviz rate limited)
 ```
-https://www.barchart.com/stocks/quotes/TICKER/news
+https://www.benzinga.com/quote/TICKER/news
 ```
-Use WebFetch tool to retrieve and analyze news from Barchart.
+Use WebFetch tool to retrieve and analyze news headlines from Benzinga.
 
 **Red Flags to Avoid:**
 - Analyst downgrades
