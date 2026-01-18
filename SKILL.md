@@ -17,7 +17,8 @@ Stock screening, quotes, SEC filings, and news.
 
 ## Strategies
 
-- [Swing Trade Screener](strategies/swing-trade-screener.md) - 2-3 day swing trades, $30-40 stocks with institutional support
+- [Swing Trade Screener](strategies/swing-trade-screener.md) - Screen for 2-3 day swing trade candidates
+- [Single Stock Analysis](strategies/single-stock-analysis.md) - Evaluate a specific ticker for entry
 
 ## Capabilities
 
