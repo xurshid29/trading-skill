@@ -17,8 +17,10 @@ Stock screening, quotes, SEC filings, and news.
 
 ## Strategies
 
-- [Swing Trade Screener](strategies/swing-trade-screener.md) - Screen for 2-3 day swing trade candidates
-- [Single Stock Analysis](strategies/single-stock-analysis.md) - Evaluate a specific ticker for entry
+| Strategy | Trigger Phrases |
+|----------|-----------------|
+| [Swing Trade Screener](strategies/swing-trade-screener.md) | "run swing screener", "find swing trade candidates", "screen for swing trades" |
+| [Single Stock Analysis](strategies/single-stock-analysis.md) | "analyze AAPL", "evaluate MSFT for entry", "should I buy NVDA?" |
 
 ## Capabilities
 
