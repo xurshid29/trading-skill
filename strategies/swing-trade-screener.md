@@ -17,9 +17,14 @@
 - **Average Volume**: > 500K (liquidity)
 - **Market Cap**: Mid cap or higher
 
-### Institutional Support
+### Institutional & Insider Support
 - **Institutional Ownership**: > 50%
 - **Institutional Transactions**: Positive (institutions buying)
+- **Insider Transactions**: Not heavily negative
+
+### Short Interest
+- **Short Float**: < 10% (avoid heavily shorted)
+- **Short Ratio**: < 5 days to cover
 
 ### Technical Setup (IMPORTANT)
 Looking for stocks that are:
@@ -76,7 +81,12 @@ From the results, select stocks where:
 - Daily Change: 3-5%
 - RSI: 40-60 (not overbought)
 - vs SMA20: -5% to +5% (near moving average, not extended)
+- vs SMA50: -5% to +5% (trend aligned)
+- 52W High: > 5% below (not extended)
 - Beta: < 1.5 (manageable volatility)
+- Short Float: < 10%
+- Short Ratio: < 5 days
+- Insider Trans: Not heavily negative
 
 ### Step 3: Get Detailed Data for Top 10
 ```bash
@@ -123,9 +133,14 @@ Narrow down to 3-4 stocks with:
 | Daily Change | 3-5% | Shows momentum, not overextended |
 | RSI | 40-60 | Room to run, not overbought |
 | vs SMA20 | -5% to +5% | Near support/resistance |
+| vs SMA50 | -5% to +5% | Trend alignment confirmed |
+| 52W High | > 5% below | Not extended/chasing |
 | Beta | < 1.5 | Manageable risk |
 | Inst. Own | > 50% | Smart money backing |
 | Inst. Trans | Positive | Currently accumulating |
+| Insider Trans | Not negative | No insider selling |
+| Short Float | < 10% | Not heavily shorted |
+| Short Ratio | < 5 days | Low squeeze risk |
 | Volume | > 500K avg | Easy entry/exit |
 | News | Clean | No surprises |
 
@@ -157,11 +172,15 @@ Narrow down to 3-4 stocks with:
 
 | Rule | Value |
 |------|-------|
-| Stop Loss | 2-3% below entry |
+| Stop Loss | 1.5-2× ATR below entry (or 2-3% if ATR unavailable) |
 | Take Profit | 5-8% above entry |
 | Risk/Reward | Minimum 2:1 |
 | Position Size | Max 10% of portfolio per trade |
 | Max Positions | 3-4 concurrent |
+
+**ATR-Based Stop Loss:**
+Using ATR adapts your stop to the stock's actual volatility.
+- Example: ATR = $0.50, Entry = $25.00 → Stop = $24.25 (1.5× ATR)
 
 ---
 
@@ -181,18 +200,19 @@ Narrow down to 3-4 stocks with:
 - RSI (14): XX.XX
 - vs SMA20: +X.XX%
 - vs SMA50: +X.XX%
+- 52W High: -X.XX%
 - Beta: X.XX
+- ATR: $X.XX
 - Pattern: [Consolidation/Pullback/Reversal]
 
-### Institutional
-- Ownership: XX%
-- Transactions: +X.XX%
+### Institutional & Insider
+- Inst. Ownership: XX%
+- Inst. Transactions: +X.XX%
+- Insider Transactions: +X.XX%
 
-### Financials
-- P/E: XX.XX
-- ROE: XX%
-- Profit Margin: XX%
-- Dividend: X.XX%
+### Short Interest
+- Short Float: X.XX%
+- Short Ratio: X.X days
 
 ### News Check
 - [ ] No negative breaking news
@@ -204,6 +224,7 @@ Narrow down to 3-4 stocks with:
 [BUY / WATCH / SKIP]
 
 Entry: $XX.XX
-Stop: $XX.XX (-X%)
+Stop: $XX.XX (1.5× ATR or -X%)
 Target: $XX.XX (+X%)
+R/R: X.X:1
 ```

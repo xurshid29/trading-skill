@@ -11,11 +11,17 @@ Use this template when you have a specific ticker and want to evaluate it for a 
 | Daily Change | 3-5% (momentum, not overextended) | |
 | Institutional Ownership | > 50% | |
 | Institutional Transactions | Positive | |
+| Insider Transactions | Positive or neutral (not selling) | |
 | Average Volume | > 500K | |
 | Market Cap | Mid cap+ | |
 | RSI | 40-60 (not overbought) | |
 | vs SMA20 | -5% to +5% (not extended) | |
+| vs SMA50 | -5% to +5% (trend aligned) | |
+| 52W High | > -5% from high = extended, avoid | |
 | Beta | < 1.5 (manageable risk) | |
+| Short Float | < 10% (avoid heavily shorted) | |
+| Short Ratio | < 5 days (avoid squeeze risk) | |
+| ATR | Note for stop loss sizing | |
 | Breaking News | None negative | |
 | Earnings | Not within 3 days | |
 
@@ -71,12 +77,19 @@ curl -s "https://elite.finviz.com/export/latest-filings?t=TICKER&o=-filingDate&a
 ### Technical Setup
 - [ ] RSI between 40-60 (not overbought)
 - [ ] Price within 5% of SMA20 (not extended)
+- [ ] Price within 5% of SMA50 (trend aligned)
+- [ ] Not within 5% of 52W high (avoid extended)
 - [ ] Beta < 1.5 (manageable volatility)
 - [ ] Pattern: Consolidation, pullback, or early reversal (NOT extended uptrend)
 
-### Institutional Support
+### Institutional & Insider Support
 - [ ] Institutional ownership > 50%
 - [ ] Institutional transactions positive (accumulating)
+- [ ] Insider transactions positive or neutral (no heavy selling)
+
+### Short Interest
+- [ ] Short float < 10% (avoid heavily shorted stocks)
+- [ ] Short ratio < 5 days to cover (avoid squeeze risk)
 
 ### News & Events
 - [ ] No analyst downgrades in past week
@@ -144,6 +157,10 @@ Any of these:
 - Institutional ownership < 50%
 - RSI > 70 (overbought)
 - Extended uptrend (> 10% above SMA20)
+- Within 5% of 52W high (extended)
+- Short float > 10% (heavily shorted)
+- Short ratio > 5 days (squeeze risk)
+- Insider transactions heavily negative
 - Negative breaking news
 - Earnings within 3 days
 - Beta > 2.0
@@ -157,11 +174,16 @@ If decision is **BUY**:
 | Parameter | Value |
 |-----------|-------|
 | Entry | Current price or limit near support |
-| Stop Loss | 2-3% below entry |
+| Stop Loss | 1.5-2× ATR below entry (or 2-3% if ATR unavailable) |
 | Target 1 | 5% above entry |
 | Target 2 | 8% above entry |
 | Hold Time | 2-3 days max |
 | Position Size | Max 10% of portfolio |
+
+**ATR-Based Stop Loss Example:**
+- If ATR = $0.50 and entry = $25.00
+- Stop = $25.00 - (1.5 × $0.50) = $24.25
+- This adapts to the stock's actual volatility
 
 ---
 
@@ -178,9 +200,15 @@ If decision is **BUY**:
 | Volume | X.XM | >500K | ✅/❌ |
 | Inst Own | XX% | >50% | ✅/❌ |
 | Inst Trans | +X.XX% | Positive | ✅/❌ |
+| Insider Trans | +X.XX% | Not negative | ✅/❌ |
 | RSI | XX.XX | 40-60 | ✅/❌ |
 | vs SMA20 | +X.XX% | ±5% | ✅/❌ |
+| vs SMA50 | +X.XX% | ±5% | ✅/❌ |
+| 52W High | -X.XX% | >5% below | ✅/❌ |
 | Beta | X.XX | <1.5 | ✅/❌ |
+| Short Float | X.XX% | <10% | ✅/❌ |
+| Short Ratio | X.X days | <5 days | ✅/❌ |
+| ATR | $X.XX | (for stop calc) | - |
 
 ### Technical Pattern
 [Consolidation / Pullback / Early Reversal / Extended - AVOID]
@@ -195,7 +223,7 @@ If decision is **BUY**:
 
 ### Trade Setup (if BUY)
 - Entry: $XX.XX
-- Stop: $XX.XX (-X%)
+- Stop: $XX.XX (1.5× ATR or -X%)
 - Target: $XX.XX (+X%)
 - R/R: X.X:1
 ```
