@@ -22,6 +22,9 @@ Use this template when you have a specific ticker and want to evaluate it for a 
 | Short Float | < 10% (avoid heavily shorted) | |
 | Short Ratio | < 5 days (avoid squeeze risk) | |
 | ATR | Note for stop loss sizing | |
+| Profit Margin | > 0% (profitable) | |
+| P/E Ratio | < 50 (not overvalued) | |
+| Debt/Equity | < 2 (not overleveraged) | |
 | Breaking News | None negative | |
 | Earnings | Not within 3 days | |
 
@@ -90,6 +93,11 @@ curl -s "https://elite.finviz.com/export/latest-filings?t=TICKER&o=-filingDate&a
 ### Short Interest
 - [ ] Short float < 10% (avoid heavily shorted stocks)
 - [ ] Short ratio < 5 days to cover (avoid squeeze risk)
+
+### Fundamentals (Light Check)
+- [ ] Profit Margin > 0% (company is profitable)
+- [ ] P/E Ratio < 50 (not extremely overvalued)
+- [ ] Debt/Equity < 2 (not overleveraged)
 
 ### News & Events
 - [ ] No analyst downgrades in past week
@@ -164,6 +172,9 @@ Any of these:
 - Negative breaking news
 - Earnings within 3 days
 - Beta > 2.0
+- Profit Margin negative (unprofitable)
+- P/E > 100 (extremely overvalued)
+- Debt/Equity > 3 (heavily indebted)
 
 ---
 
@@ -208,6 +219,9 @@ If decision is **BUY**:
 | Beta | X.XX | <1.5 | ✅/❌ |
 | Short Float | X.XX% | <10% | ✅/❌ |
 | Short Ratio | X.X days | <5 days | ✅/❌ |
+| Profit Margin | X.XX% | >0% | ✅/❌ |
+| P/E Ratio | XX.XX | <50 | ✅/❌ |
+| Debt/Equity | X.XX | <2 | ✅/❌ |
 | ATR | $X.XX | (for stop calc) | - |
 
 ### Technical Pattern

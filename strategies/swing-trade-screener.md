@@ -26,6 +26,11 @@
 - **Short Float**: < 10% (avoid heavily shorted)
 - **Short Ratio**: < 5 days to cover
 
+### Fundamentals (Light Check)
+- **Profit Margin**: > 0% (company is profitable)
+- **P/E Ratio**: < 50 (not extremely overvalued)
+- **Debt/Equity**: < 2 (not overleveraged)
+
 ### Technical Setup (IMPORTANT)
 Looking for stocks that are:
 - ❌ NOT in strong uptrend (avoid chasing)
@@ -45,9 +50,9 @@ Looking for stocks that are:
 
 ### Primary Screen (Recommended)
 ```bash
-# Core filters: price, inst ownership, inst transactions, volume, beta, short float
+# Core filters: price, inst ownership, inst transactions, volume, beta, short float, fundamentals
 # Adjust price range as needed (e.g., sh_price_o20,sh_price_u30 for $20-30)
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 ```
 
 **Filters applied automatically:**
@@ -58,6 +63,9 @@ curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,
 - Market Cap: Mid+
 - Beta: <1.5 ✅ (hard filter)
 - Short Float: <10% ✅ (hard filter)
+- Profit Margin: >0% ✅ (hard filter)
+- P/E: <50 ✅ (hard filter)
+- Debt/Equity: <2 ✅ (hard filter)
 
 **Filter manually from results:**
 - RSI: 40-60 (note 60-70 as WATCH)
@@ -68,13 +76,13 @@ curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,
 ### Alternative Price Ranges
 ```bash
 # $10-20 range
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o10,sh_price_u20,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o10,sh_price_u20,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 
 # $20-30 range
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o20,sh_price_u30,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o20,sh_price_u30,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 
 # $40-50 range
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o40,sh_price_u50,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o40,sh_price_u50,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 ```
 
 ---
@@ -83,8 +91,8 @@ curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o40,sh_price_u50,
 
 ### Step 1: Run Screener
 ```bash
-# Get technical data with hard filters (beta <1.5, short float <10%)
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
+# Get technical data with hard filters (beta, short float, fundamentals)
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 ```
 
 ### Step 2: Filter Results (Manual)
@@ -164,6 +172,9 @@ Most criteria pass with minor flags:
 | Insider Trans | Not negative | No insider selling |
 | Short Float | < 10% | Not heavily shorted |
 | Short Ratio | < 5 days | Low squeeze risk |
+| Profit Margin | > 0% | Company is profitable |
+| P/E Ratio | < 50 | Not extremely overvalued |
+| Debt/Equity | < 2 | Not overleveraged |
 | Volume | > 500K avg | Easy entry/exit |
 | News | Clean | No surprises |
 
@@ -236,6 +247,11 @@ Using ATR adapts your stop to the stock's actual volatility.
 ### Short Interest
 - Short Float: X.XX%
 - Short Ratio: X.X days
+
+### Fundamentals
+- Profit Margin: X.XX%
+- P/E Ratio: XX.XX
+- Debt/Equity: X.XX
 
 ### News Check
 - [ ] No negative breaking news
