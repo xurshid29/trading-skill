@@ -60,11 +60,11 @@ curl -s "https://elite.finviz.com/quote_export.ashx?t=TICKER&p=d&auth=$FINVIZ_AP
 
 ### Step 5: News Check (CRITICAL)
 ```bash
-# Primary: Finviz
+# Primary: Finviz (add sleep if checking multiple stocks)
 curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=TICKER&auth=$FINVIZ_API_TOKEN" | head -20
 ```
 
-**Fallback: Benzinga** (if Finviz rate limited)
+**Fallback: Benzinga** (if Finviz rate limited or returns empty)
 ```
 https://www.benzinga.com/quote/TICKER/news
 ```

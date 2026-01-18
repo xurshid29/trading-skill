@@ -156,16 +156,29 @@ Apply tiered criteria:
 | WATCH | <7 days | <-5% | <2.0 |
 
 ### Step 4: News Check (CRITICAL)
+
+**Important: Only check news for final 9-12 candidates after filtering by pattern and ownership.**
+
 ```bash
-# Check each ticker for breaking news (Finviz)
-curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=TICKER&auth=$FINVIZ_API_TOKEN" | head -15
+# Check news in small batches (3-5 tickers at a time) to avoid rate limiting
+# Batch 1
+for ticker in TICK1 TICK2 TICK3; do
+  echo "=== $ticker ===" && curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=$ticker&auth=$FINVIZ_API_TOKEN" | head -10
+  sleep 1
+done
+
+# Batch 2 (after reviewing batch 1)
+for ticker in TICK4 TICK5 TICK6; do
+  echo "=== $ticker ===" && curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=$ticker&auth=$FINVIZ_API_TOKEN" | head -10
+  sleep 1
+done
 ```
 
 **Fallback: Benzinga** (if Finviz rate limited)
 ```
 https://www.benzinga.com/quote/TICKER/news
 ```
-Use WebFetch tool to retrieve and analyze news headlines from Benzinga.
+Use WebFetch tool to retrieve and analyze news headlines from Benzinga (one ticker at a time).
 
 **Red Flags to Avoid:**
 - Analyst downgrades
