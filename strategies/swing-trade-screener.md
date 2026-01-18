@@ -7,7 +7,14 @@
 | **Position** | Long only |
 | **Hold Time** | 2-3 days |
 | **Timeframe** | 4H - 1D |
-| **Final Output** | 6-7 top picks (3-4 BUY + 3 WATCH) |
+| **Final Output** | Minimum 9 picks by pattern |
+
+### Output Categories (Minimum 3 each)
+| Category | Description | RSI Range | SMA Position |
+|----------|-------------|-----------|--------------|
+| **Starting Uptrend** | Early breakout, crossing above MAs | 50-65 | Above SMA20, near SMA50 |
+| **Consolidation** | Building base, low volatility | 45-55 | Within ±3% of SMA20 & SMA50 |
+| **Downtrend Reversal** | Oversold bounce potential | 35-50 | Below SMA20, showing support |
 
 ## Screening Criteria
 
@@ -46,43 +53,63 @@ Looking for stocks that are:
 
 ---
 
+## Tiered Criteria (Strict vs Relaxed)
+
+If not enough results with strict criteria, gradually relax to find minimum 9 picks.
+
+| Criteria | Strict (BUY) | Relaxed (WATCH) |
+|----------|--------------|-----------------|
+| RSI | 40-60 | 35-70 |
+| vs SMA20 | ±5% | ±10% |
+| vs SMA50 | ±5% | ±10% |
+| Beta | < 1.5 | < 2.0 |
+| Short Float | < 10% | < 15% |
+| Short Ratio | < 5 days | < 7 days |
+| Insider Trans | Not negative | < -5% (minor selling OK) |
+
+**Priority:** Fill each pattern category with strict criteria first, then relax as needed.
+
+---
+
 ## Finviz API Filters
 
-### Primary Screen (Recommended)
+### Primary Screen (Relaxed for More Results)
 ```bash
-# Core filters: price, inst ownership, inst transactions, volume, beta, short float, fundamentals
-# Adjust price range as needed (e.g., sh_price_o20,sh_price_u30 for $20-30)
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
+# Relaxed filters to get more candidates, then filter manually by pattern
+# Uses beta <2.0 and short float <15% to capture more stocks
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u2,sh_short_u15,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 ```
 
-**Filters applied automatically:**
+**Filters applied automatically (relaxed):**
 - Price: $30-40 (configurable)
 - Inst Ownership: >50%
 - Inst Transactions: Positive
 - Avg Volume: >500K
 - Market Cap: Mid+
-- Beta: <1.5 ✅ (hard filter)
-- Short Float: <10% ✅ (hard filter)
-- Profit Margin: >0% ✅ (hard filter)
-- P/E: <50 ✅ (hard filter)
-- Debt/Equity: <2 ✅ (hard filter)
+- Beta: <2.0 (relaxed from 1.5)
+- Short Float: <15% (relaxed from 10%)
+- Profit Margin: >0%
+- P/E: <50
+- Debt/Equity: <2
 
-**Filter manually from results:**
-- RSI: 40-60 (note 60-70 as WATCH)
-- vs SMA20/50: ±5%
-- 52W High: >5% below (note breakouts)
-- Insider Trans: Not negative
+**Filter manually by pattern:**
+
+| Pattern | RSI | vs SMA20 | vs SMA50 | Look For |
+|---------|-----|----------|----------|----------|
+| Starting Uptrend | 50-65 | +1% to +10% | -3% to +5% | Breaking above MAs |
+| Consolidation | 45-55 | -3% to +3% | -3% to +3% | Tight range, low ATR |
+| Downtrend Reversal | 35-50 | -10% to -1% | -10% to +1% | Oversold bounce |
 
 ### Alternative Price Ranges
 ```bash
 # $10-20 range
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o10,sh_price_u20,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o10,sh_price_u20,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u2,sh_short_u15,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 
 # $20-30 range
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o20,sh_price_u30,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o20,sh_price_u30,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u2,sh_short_u15,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 
 # $40-50 range
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o40,sh_price_u50,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o40,sh_price_u50,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u2,sh_short_u15,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 ```
 
 ---
@@ -91,19 +118,30 @@ curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o40,sh_price_u50,
 
 ### Step 1: Run Screener
 ```bash
-# Get technical data with hard filters (beta, short float, fundamentals)
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
+# Get technical data with relaxed filters for more results
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u2,sh_short_u15,fa_netmargin_pos,fa_pe_u50,fa_debteq_u2&auth=$FINVIZ_API_TOKEN"
 ```
 
-### Step 2: Filter Results (Manual)
-From results, select stocks where:
-- RSI: 40-60 ✅ (note 60-70 as WATCH)
-- vs SMA20: ±5% ✅
-- vs SMA50: ±5% ✅
-- 52W High: >5% below ✅ (note breakouts)
-- Daily Change: 3-5% (momentum)
+### Step 2: Categorize by Pattern
+Sort results into three categories based on technicals:
 
-*Beta and Short Float already filtered by API*
+**Starting Uptrend (3-4 picks):**
+- RSI: 50-65
+- vs SMA20: +1% to +10%
+- vs SMA50: -3% to +5%
+- Look for: Price crossing above SMA20
+
+**Consolidation (3-4 picks):**
+- RSI: 45-55
+- vs SMA20: -3% to +3%
+- vs SMA50: -3% to +3%
+- Look for: Tight price range, decreasing volume
+
+**Downtrend Reversal (3-4 picks):**
+- RSI: 35-50
+- vs SMA20: -10% to -1%
+- vs SMA50: -10% to +1%
+- Look for: Oversold bounce, hammer candles
 
 ### Step 3: Get Ownership Data for Candidates
 ```bash
@@ -111,9 +149,11 @@ From results, select stocks where:
 curl -s "https://elite.finviz.com/export.ashx?v=131&t=TICKER1,TICKER2,...&auth=$FINVIZ_API_TOKEN"
 ```
 
-Check from ownership data:
-- Short Ratio: <5 days ✅
-- Insider Trans: Not negative ✅
+Apply tiered criteria:
+| Tier | Short Ratio | Insider Trans | Beta |
+|------|-------------|---------------|------|
+| BUY | <5 days | Not negative | <1.5 |
+| WATCH | <7 days | <-5% | <2.0 |
 
 ### Step 4: News Check (CRITICAL)
 ```bash
@@ -136,23 +176,25 @@ curl -s "https://elite.finviz.com/news_export.ashx?v=3&t=TICKER&auth=$FINVIZ_API
 - Insider buying
 - Industry tailwinds
 
-### Step 5: Final Selection (6-7 Picks)
+### Step 5: Final Selection (Minimum 9 Picks)
 
-**BUY Category (3-4 stocks):**
-All criteria pass:
-- RSI 40-60 ✅
-- SMA20/50 within ±5% ✅
-- 52W High >5% below ✅
-- Short Ratio <5 days ✅
-- Insider Trans not negative ✅
-- News clear ✅
+**Output Format - 3 Categories:**
 
-**WATCH Category (3 stocks):**
-Most criteria pass with minor flags:
-- RSI 60-70 (slightly high)
-- OR Short Ratio 5-6 days (slightly over)
-- OR minor analyst concern
-- Still tradeable with smaller position size
+| Category | Min Picks | Tier Mix |
+|----------|-----------|----------|
+| Starting Uptrend | 3-4 | 2 BUY + 1-2 WATCH |
+| Consolidation | 3-4 | 2 BUY + 1-2 WATCH |
+| Downtrend Reversal | 3-4 | 1-2 BUY + 2 WATCH |
+
+**BUY Criteria (strict):**
+- Beta <1.5, Short Ratio <5, Short Float <10%
+- Insider Trans not negative
+- News clear, no earnings within 3 days
+
+**WATCH Criteria (relaxed):**
+- Beta <2.0, Short Ratio <7, Short Float <15%
+- Insider Trans <-5% (minor selling OK)
+- Minor flags acceptable with smaller position
 
 ---
 
