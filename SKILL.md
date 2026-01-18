@@ -15,6 +15,10 @@ Stock screening, quotes, SEC filings, and news.
 - **Docs**: [docs/finviz-api.md](docs/finviz-api.md)
 - **Token**: `export FINVIZ_API_TOKEN="your-token"`
 
+## Strategies
+
+- [Swing Trade Screener](strategies/swing-trade-screener.md) - 2-3 day swing trades, $30-40 stocks with institutional support
+
 ## Capabilities
 
 ### Finviz
