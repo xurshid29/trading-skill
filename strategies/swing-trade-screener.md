@@ -43,24 +43,38 @@ Looking for stocks that are:
 
 ## Finviz API Filters
 
-### Primary Screen
+### Primary Screen (Recommended)
 ```bash
-# Stocks $30-40, 50%+ inst ownership, positive inst transactions, good volume
-curl -s "https://elite.finviz.com/export.ashx?v=111&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover&auth=$FINVIZ_API_TOKEN"
+# Core filters: price, inst ownership, inst transactions, volume, beta, short float
+# Adjust price range as needed (e.g., sh_price_o20,sh_price_u30 for $20-30)
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
 ```
 
-### With Daily Change Filter (3-5%)
-```bash
-# Add ta_change_u5 (under 5%) and ta_change_o3 (over 3%) if available
-# Or filter results manually for 3-5% change
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover&auth=$FINVIZ_API_TOKEN"
-```
+**Filters applied automatically:**
+- Price: $30-40 (configurable)
+- Inst Ownership: >50%
+- Inst Transactions: Positive
+- Avg Volume: >500K
+- Market Cap: Mid+
+- Beta: <1.5 ✅ (hard filter)
+- Short Float: <10% ✅ (hard filter)
 
-### Consolidation/Early Uptrend (NOT extended)
+**Filter manually from results:**
+- RSI: 40-60 (note 60-70 as WATCH)
+- vs SMA20/50: ±5%
+- 52W High: >5% below (note breakouts)
+- Insider Trans: Not negative
+
+### Alternative Price Ranges
 ```bash
-# Price near SMA20/50 but not too far above (< 5% above)
-# RSI between 40-60 (neutral zone)
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_rsi_nob60&auth=$FINVIZ_API_TOKEN"
+# $10-20 range
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o10,sh_price_u20,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
+
+# $20-30 range
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o20,sh_price_u30,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
+
+# $40-50 range
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o40,sh_price_u50,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
 ```
 
 ---
@@ -69,31 +83,29 @@ curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,
 
 ### Step 1: Run Screener
 ```bash
-# Get overview data
-curl -s "https://elite.finviz.com/export.ashx?v=111&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover&auth=$FINVIZ_API_TOKEN"
-
-# Get technical data for filtering
-curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover&auth=$FINVIZ_API_TOKEN"
+# Get technical data with hard filters (beta <1.5, short float <10%)
+curl -s "https://elite.finviz.com/export.ashx?v=171&f=sh_price_o30,sh_price_u40,sh_instown_o50,sh_insttrans_pos,sh_avgvol_o500,cap_midover,ta_beta_u1.5,sh_short_u10&auth=$FINVIZ_API_TOKEN"
 ```
 
-### Step 2: Filter Results
-From the results, select stocks where:
-- Daily Change: 3-5%
-- RSI: 40-60 (not overbought)
-- vs SMA20: -5% to +5% (near moving average, not extended)
-- vs SMA50: -5% to +5% (trend aligned)
-- 52W High: > 5% below (not extended)
-- Beta: < 1.5 (manageable volatility)
-- Short Float: < 10%
-- Short Ratio: < 5 days
-- Insider Trans: Not heavily negative
+### Step 2: Filter Results (Manual)
+From results, select stocks where:
+- RSI: 40-60 ✅ (note 60-70 as WATCH)
+- vs SMA20: ±5% ✅
+- vs SMA50: ±5% ✅
+- 52W High: >5% below ✅ (note breakouts)
+- Daily Change: 3-5% (momentum)
 
-### Step 3: Get Detailed Data for Top 10
+*Beta and Short Float already filtered by API*
+
+### Step 3: Get Ownership Data for Candidates
 ```bash
-# Replace TICKERS with comma-separated list
-curl -s "https://elite.finviz.com/export.ashx?v=161&t=TICKER1,TICKER2,...&auth=$FINVIZ_API_TOKEN"  # Financials
-curl -s "https://elite.finviz.com/export.ashx?v=131&t=TICKER1,TICKER2,...&auth=$FINVIZ_API_TOKEN"  # Ownership
+# Replace TICKERS with comma-separated list from Step 2
+curl -s "https://elite.finviz.com/export.ashx?v=131&t=TICKER1,TICKER2,...&auth=$FINVIZ_API_TOKEN"
 ```
+
+Check from ownership data:
+- Short Ratio: <5 days ✅
+- Insider Trans: Not negative ✅
 
 ### Step 4: News Check (CRITICAL)
 ```bash
