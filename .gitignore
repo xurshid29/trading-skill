@@ -1,0 +1,16 @@
+# Environment variables (contains API tokens)
+.env
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+
+# Generated files
+resources/finviz/*_clean.txt
