@@ -246,14 +246,51 @@ export const screeningService = {
     await getDb().deleteFrom('screenings').where('id', '=', id).execute();
   },
 
-  // Get results by ticker (latest first)
+  // Get results by ticker (latest first) with screening info
   async getResultsByTicker(ticker: string) {
     return getDb()
-      .selectFrom('screening_results')
-      .selectAll()
-      .where('ticker', '=', ticker.toUpperCase())
-      .orderBy('created_at', 'desc')
-      .limit(10)
+      .selectFrom('screening_results as sr')
+      .leftJoin('screenings as s', 's.id', 'sr.screening_id')
+      .select([
+        'sr.id',
+        'sr.screening_id',
+        'sr.ticker',
+        'sr.price',
+        'sr.change_pct',
+        'sr.volume',
+        'sr.avg_volume',
+        'sr.market_cap',
+        'sr.rsi',
+        'sr.sma20_pct',
+        'sr.sma50_pct',
+        'sr.sma200_pct',
+        'sr.high_52w_pct',
+        'sr.low_52w_pct',
+        'sr.beta',
+        'sr.atr',
+        'sr.inst_own_pct',
+        'sr.inst_trans_pct',
+        'sr.insider_own_pct',
+        'sr.insider_trans_pct',
+        'sr.short_float_pct',
+        'sr.short_ratio',
+        'sr.profit_margin_pct',
+        'sr.pe_ratio',
+        'sr.debt_equity',
+        'sr.dividend_yield',
+        'sr.pattern',
+        'sr.tier',
+        'sr.news_status',
+        'sr.news_notes',
+        'sr.earnings_date',
+        'sr.raw_data',
+        'sr.created_at',
+        's.name as screening_name',
+        's.created_at as screening_date',
+      ])
+      .where('sr.ticker', '=', ticker.toUpperCase())
+      .orderBy('sr.created_at', 'desc')
+      .limit(20)
       .execute();
   },
 };

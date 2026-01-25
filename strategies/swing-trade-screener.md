@@ -490,11 +490,17 @@ curl -s -X POST http://localhost:3001/api/screenings/[SCREENING_ID]/complete \
 | Downtrend Reversal | `downtrend_reversal` |
 | Unknown | `unknown` |
 
-| Tier | Value | Criteria |
-|------|-------|----------|
-| BUY | `buy` | Strict criteria met |
-| WATCH | `watch` | Relaxed criteria met |
-| SKIP | `skip` | Failed criteria or red flag news |
+| Tier | Value | Criteria | Recommendation |
+|------|-------|----------|----------------|
+| BUY | `buy` | Strict criteria met | Full recommendation |
+| WATCH | `watch` | Relaxed criteria met | Full recommendation + `watchReason` |
+| SKIP | `skip` | Failed criteria or red flag news | No recommendation |
+
+**WATCH tier watchReason examples:**
+- "Minor insider selling (-1.4%). Wait for insider activity to stabilize."
+- "Higher beta (1.31). Wait for market volatility to decrease."
+- "Earnings in 3 days. Wait for post-earnings clarity."
+- "Short ratio elevated (6.5 days). Monitor for squeeze risk."
 
 | News Status | Value |
 |-------------|-------|
@@ -539,7 +545,47 @@ curl -s -X POST http://localhost:3001/api/screenings/[SCREENING_ID]/complete \
 ### Automated Workflow
 When running the screener, Claude should:
 1. Execute Steps 1-5 of the screening workflow
-2. Create a screening session via API
+2. Create a screening session via API or direct SQL
 3. Store all results with pattern, tier, and news status
-4. Mark screening as complete
-5. Results will be visible in the UI at http://localhost:5173/screenings
+4. **Generate recommendations for ALL tiers** (both BUY and WATCH):
+   - Entry range, stop loss, target1, target2, riskReward
+   - Thesis, catalysts, risks
+   - **watchReason** (WATCH tier only) - explains why it's not a BUY
+5. Mark screening as complete
+6. Results will be visible in the UI at http://localhost:5173/screenings
+
+### Direct Database Access (Preferred)
+Instead of HTTP requests, use psql directly for faster updates:
+
+```bash
+source .env
+
+# Create screening
+psql "$DATABASE_URL" -c "INSERT INTO screenings (name, price_min, price_max, status) VALUES ('Swing Trade Scan - 2026-01-25', 20, 50, 'running') RETURNING id;"
+
+# Add recommendation to a result
+psql "$DATABASE_URL" << 'EOF'
+UPDATE screening_results SET raw_data = jsonb_set(
+  raw_data,
+  '{recommendation}',
+  '{
+    "entry": {"min": 35.00, "max": 35.90},
+    "stopLoss": 33.90,
+    "target1": 38.50,
+    "target2": 41.00,
+    "riskReward": "2.1:1",
+    "thesis": "Investment thesis...",
+    "catalysts": ["Catalyst 1", "Catalyst 2"],
+    "risks": ["Risk 1", "Risk 2"],
+    "watchReason": "Why WATCH not BUY (only for WATCH tier)",
+    "sector": "Utilities",
+    "industry": "Gas Utilities",
+    "company": "Company Name",
+    "marketCap": 7230.79
+  }'::jsonb
+) WHERE id = 'result-uuid-here';
+EOF
+
+# Verify recommendations exist
+psql "$DATABASE_URL" -c "SELECT ticker, tier, raw_data->'recommendation'->>'riskReward' as rr FROM screening_results WHERE screening_id = 'xxx';"
+```

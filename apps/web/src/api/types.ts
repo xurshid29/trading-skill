@@ -93,6 +93,12 @@ export interface ScreeningWithResults extends Screening {
   results: ScreeningResult[];
 }
 
+// Result with screening info for analysis page timeline
+export interface ScreeningResultWithInfo extends ScreeningResult {
+  screening_name: string | null;
+  screening_date: string | null;
+}
+
 export interface TradeSetup {
   id: string;
   user_id: string | null;

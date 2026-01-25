@@ -132,7 +132,7 @@ JWT_EXPIRES_IN=7d
 | POST | `/api/screenings/:id/results` | Add results (single or array) |
 | POST | `/api/screenings/:id/complete` | Mark screening complete |
 | GET | `/api/screenings/:id/results` | Get results with filters |
-| GET | `/api/screenings/ticker/:ticker` | Get results by ticker |
+| GET | `/api/screenings/ticker/:ticker` | Get results by ticker (with screening info) |
 | PATCH | `/api/screenings/results/:id` | Update result (tier, newsStatus, newsNotes, rawData) |
 | DELETE | `/api/screenings/:id` | Delete screening |
 
@@ -187,18 +187,24 @@ See the "Database Integration" section in [swing-trade-screener.md](strategies/s
 | Analysis | `/analysis/:ticker` | Detailed ticker view with recommendations |
 
 ### Analysis Page Features
-The analysis page (`/analysis/TICKER`) displays:
+The analysis page (`/analysis/TICKER`) displays a **timeline/history view** when a ticker has multiple screening results:
+
+**Layout:**
+- **Latest Result** (always expanded at top): Shows full analysis with "Latest" tag, screening name, and date
+- **Previous Analyses** (collapsible cards below): Click to expand any historical result
+
+**Each result card displays:**
 - **Price & Stats**: Current price, change, RSI, market cap
 - **Technical Indicators**: SMA 20/50/200, 52W High/Low, Beta, ATR
 - **Ownership**: Institutional/insider ownership and transactions
 - **Short Interest**: Short float %, short ratio
 - **Fundamentals**: P/E, profit margin, debt/equity, dividend yield
 - **Classification**: Tier badge, pattern badge, news status
-- **Trade Setup** (if recommendation exists): Entry range, stop loss, targets, R/R ratio
+- **Trade Setup** (for both BUY and WATCH tiers): Entry range, stop loss, targets, R/R ratio
 - **Investment Thesis**: Why this stock is a pick
 - **Catalysts**: Upcoming events that could move the stock
 - **Risks**: What could go wrong
-- **Watch Reason**: Why it's WATCH not BUY (for WATCH tier)
+- **Watch Reason**: Why it's WATCH not BUY (for WATCH tier only)
 - **News Headlines**: Recent news with summary
 
 ---
@@ -227,6 +233,9 @@ The analysis page (`/analysis/TICKER`) displays:
 - [x] Structured recommendation storage in raw_data
 - [x] Finviz API client with rate limiting
 - [x] Pattern/tier classifier service
+- [x] **Analysis page timeline/history view** - shows all screening results for a ticker with latest expanded and older results collapsible
+- [x] **Recommendations for both BUY and WATCH tiers** - all picks get entry/stop/target, WATCH tier includes watchReason
+- [x] **API returns screening info with ticker results** - screening_name and screening_date included for context
 
 ### Next Steps
 - [ ] Trade setup form (create trade_setups from screening results)
@@ -244,10 +253,31 @@ The analysis page (`/analysis/TICKER`) displays:
 
 ---
 
+## Direct Database Access
+
+For quick queries and updates, use psql directly instead of HTTP requests:
+
+```bash
+# Source .env to get DATABASE_URL
+source .env
+
+# Query examples
+psql "$DATABASE_URL" -c "SELECT ticker, tier, price FROM screening_results WHERE screening_id = 'xxx';"
+
+# Update raw_data with recommendation
+psql "$DATABASE_URL" -c "UPDATE screening_results SET raw_data = jsonb_set(raw_data, '{recommendation}', '{...}'::jsonb) WHERE id = 'xxx';"
+
+# Check which results have recommendations
+psql "$DATABASE_URL" -c "SELECT ticker, tier, raw_data->'recommendation' IS NOT NULL as has_rec FROM screening_results WHERE screening_id = 'xxx';"
+```
+
+---
+
 ## Code Conventions
 
 - **API:** Express routes return `{ data: ... }` or `{ error: ... }`
 - **Database:** Use `getDb()` for lazy initialization (ensures env vars loaded)
+- **Database (direct):** Use `source .env && psql "$DATABASE_URL"` for quick queries
 - **Validation:** Zod schemas in route handlers
 - **Types:** Database types in `apps/api/src/db/types.ts`
 - **Naming:** camelCase in TypeScript, snake_case in database
