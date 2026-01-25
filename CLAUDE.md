@@ -90,6 +90,29 @@ JWT_EXPIRES_IN=7d
 - Short interest: short_float_pct, short_ratio
 - Fundamentals: profit_margin_pct, pe_ratio, debt_equity, dividend_yield
 - Classification: pattern (enum), tier (enum), news_status (enum)
+- News: news_notes (summary text), raw_data (JSON with news headlines and recommendations)
+
+**Recommendation Structure in `raw_data`:**
+```json
+{
+  "news": ["headline1", "headline2", ...],
+  "recommendation": {
+    "entry": { "min": 35.00, "max": 35.90 },
+    "stopLoss": 33.90,
+    "target1": 38.50,
+    "target2": 41.00,
+    "riskReward": "2.1:1",
+    "thesis": "Investment thesis text...",
+    "catalysts": ["Catalyst 1", "Catalyst 2"],
+    "risks": ["Risk 1", "Risk 2"],
+    "watchReason": "Why WATCH not BUY (only for WATCH tier)",
+    "sector": "Utilities",
+    "industry": "Renewable",
+    "company": "Company Name",
+    "marketCap": 7230.79,
+    "pe": 15.33
+  }
+}
 
 ## API Endpoints
 
@@ -110,7 +133,7 @@ JWT_EXPIRES_IN=7d
 | POST | `/api/screenings/:id/complete` | Mark screening complete |
 | GET | `/api/screenings/:id/results` | Get results with filters |
 | GET | `/api/screenings/ticker/:ticker` | Get results by ticker |
-| PATCH | `/api/screenings/results/:id` | Update result tier/news |
+| PATCH | `/api/screenings/results/:id` | Update result (tier, newsStatus, newsNotes, rawData) |
 | DELETE | `/api/screenings/:id` | Delete screening |
 
 ### Dashboard
@@ -153,6 +176,31 @@ When running the swing screener, Claude will:
 
 See the "Database Integration" section in [swing-trade-screener.md](strategies/swing-trade-screener.md) for API details.
 
+## UI Pages
+
+| Page | URL | Description |
+|------|-----|-------------|
+| Login | `/login` | User authentication |
+| Dashboard | `/` | Overview with stats and recent screenings |
+| Screenings | `/screenings` | List all screening sessions |
+| Screening Detail | `/screenings/:id` | View results with filters, tier/pattern badges |
+| Analysis | `/analysis/:ticker` | Detailed ticker view with recommendations |
+
+### Analysis Page Features
+The analysis page (`/analysis/TICKER`) displays:
+- **Price & Stats**: Current price, change, RSI, market cap
+- **Technical Indicators**: SMA 20/50/200, 52W High/Low, Beta, ATR
+- **Ownership**: Institutional/insider ownership and transactions
+- **Short Interest**: Short float %, short ratio
+- **Fundamentals**: P/E, profit margin, debt/equity, dividend yield
+- **Classification**: Tier badge, pattern badge, news status
+- **Trade Setup** (if recommendation exists): Entry range, stop loss, targets, R/R ratio
+- **Investment Thesis**: Why this stock is a pick
+- **Catalysts**: Upcoming events that could move the stock
+- **Risks**: What could go wrong
+- **Watch Reason**: Why it's WATCH not BUY (for WATCH tier)
+- **News Headlines**: Recent news with summary
+
 ---
 
 ## Development Progress
@@ -169,21 +217,30 @@ See the "Database Integration" section in [swing-trade-screener.md](strategies/s
 - [x] Login/Register pages with JWT auth
 - [x] Dashboard with stats and recent screenings
 - [x] Screenings list and detail pages
-- [x] Results table with tier/pattern badges
-- [x] Analysis page for individual tickers
+- [x] Results table with tier/pattern/news badges
+- [x] News tooltip showing headlines on hover
+- [x] Analysis page with detailed recommendations display
+- [x] Trade setup card (entry, stop, targets, R/R)
+- [x] Investment thesis, catalysts, risks sections
+- [x] Watch reason alerts for WATCH tier stocks
 - [x] Strategy integration with database storage
+- [x] Structured recommendation storage in raw_data
+- [x] Finviz API client with rate limiting
+- [x] Pattern/tier classifier service
 
 ### Next Steps
-- [ ] Trade setup form (entry/stop/target)
-- [ ] SMC analysis integration
+- [ ] Trade setup form (create trade_setups from screening results)
+- [ ] SMC analysis integration with database
+- [ ] Price history charts (TradingView widget or custom)
 - [ ] Dockerfile for the full application
 
 ### Future Ideas
 - Real-time price updates via WebSocket
-- Portfolio tracking
-- P&L reporting
-- Alerts/notifications
-- Chart integration (TradingView widget?)
+- Portfolio tracking with P&L calculations
+- Alerts/notifications (price targets, stop loss hits)
+- Watchlist management
+- Historical performance tracking
+- Export to CSV/Excel
 
 ---
 
