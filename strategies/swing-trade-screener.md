@@ -9,6 +9,43 @@
 | **Timeframe** | 4H - 1D |
 | **Final Output** | Minimum 9 picks by pattern |
 
+---
+
+## Strategy Workflow Overview
+
+This screener finds **WHAT** to buy. For **WHEN** to enter, use SMC analysis on your top picks.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SWING TRADE WORKFLOW                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  SCREENING PHASE (This Strategy)                                │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ Step 1: Run Screener (50+ stocks)                       │   │
+│  │    ↓                                                    │   │
+│  │ Step 2: Apply Original Criteria (20-30 stocks)          │   │
+│  │    ↓                                                    │   │
+│  │ Step 3: Categorize by Pattern (15-18 candidates)        │   │
+│  │    ↓                                                    │   │
+│  │ Step 4: News Check (removes red flags)                  │   │
+│  │    ↓                                                    │   │
+│  │ Step 5: Final Selection (9-12 picks)                    │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                           ↓                                     │
+│  ENTRY PHASE (SMC Strategy - Optional)                          │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ Step 6: SMC Analysis on Top 3-5 Picks                   │   │
+│  │    • Identify liquidity levels                          │   │
+│  │    • Wait for sweep + CHoCH confirmation                │   │
+│  │    • Time precise entry                                 │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Key Principle:** Don't apply SMC to all screener results. Use this strategy to find quality stocks, then apply SMC only to your top picks when ready to enter.
+
 ### Output Categories (Minimum 3 each)
 | Category | Description | RSI Range | SMA Position |
 |----------|-------------|-----------|--------------|
@@ -223,6 +260,36 @@ Use WebFetch tool to retrieve and analyze news headlines from Benzinga (one tick
 - Insider Trans <-5% (minor selling OK)
 - Minor flags acceptable with smaller position
 
+### Step 6: SMC Entry Timing (Optional)
+
+**When to use:** Apply SMC analysis to your top 3-5 picks when you're ready to enter.
+
+**Command:** `SMC analyze [TICKER]`
+
+**What SMC adds:**
+| Without SMC | With SMC |
+|-------------|----------|
+| Enter at current price | Wait for liquidity sweep |
+| Stop at arbitrary % | Stop below swept low |
+| Target at +5-8% | Target at liquidity pools |
+| ~50% win rate | Better entry, same win rate |
+
+**SMC is worth it when:**
+- You have time to monitor 15M charts
+- Stock is near a key level (support/resistance)
+- You want optimal entry on a high-conviction pick
+
+**Skip SMC when:**
+- Quick portfolio building (enter multiple stocks)
+- Stock already confirmed breakout
+- Limited trading time
+
+**Typical workflow:**
+1. Screener gives you 9-12 picks (this strategy)
+2. Pick top 3-5 you're most interested in
+3. Run `SMC analyze [TICKER]` on each
+4. Enter the 1-2 with best SMC setup
+
 ---
 
 ## Ideal Stock Profile
@@ -335,4 +402,144 @@ Entry: $XX.XX
 Stop: $XX.XX (1.5× ATR or -X%)
 Target: $XX.XX (+X%)
 R/R: X.X:1
+
+### Next Step
+[ ] Ready to enter → Run `SMC analyze [TICKER]` for optimal timing
+[ ] Add to watchlist → Monitor for better setup
 ```
+
+---
+
+## When to Use Each Strategy
+
+| Scenario | Strategy | Command |
+|----------|----------|---------|
+| Find stocks to trade | This screener | "run swing screener" |
+| Analyze single stock (basic) | Single Stock Analysis | "analyze AAPL" |
+| Time entry on top pick | SMC Analysis | "SMC analyze AAPL" |
+| Manage existing position | SMC Analysis | "SMC analyze AAPL" |
+
+**Remember:** This screener finds quality stocks. SMC times the entry. Use both together for best results.
+
+---
+
+## Database Integration
+
+After completing the screening, store results in the database for tracking and UI access.
+
+### Step 1: Create Screening Session
+```bash
+curl -s -X POST http://localhost:3001/api/screenings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Swing Trade Scan - [DATE]",
+    "priceMin": [MIN_PRICE],
+    "priceMax": [MAX_PRICE]
+  }'
+```
+
+Save the returned `id` for the next step.
+
+### Step 2: Store Results
+For each stock in your final selection, add to database:
+
+```bash
+# Add single result
+curl -s -X POST http://localhost:3001/api/screenings/[SCREENING_ID]/results \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ticker": "AAPL",
+    "price": 175.50,
+    "changePct": 2.5,
+    "rsi": 52.3,
+    "sma20Pct": 1.5,
+    "sma50Pct": -2.1,
+    "sma200Pct": 5.2,
+    "beta": 1.2,
+    "instOwnPct": 62.5,
+    "instTransPct": 1.2,
+    "insiderTransPct": -0.5,
+    "shortFloatPct": 0.8,
+    "shortRatio": 1.5,
+    "pattern": "starting_uptrend",
+    "tier": "buy",
+    "newsStatus": "clean"
+  }'
+
+# Or add multiple results at once
+curl -s -X POST http://localhost:3001/api/screenings/[SCREENING_ID]/results \
+  -H "Content-Type: application/json" \
+  -d '[
+    { "ticker": "AAPL", "price": 175.50, "pattern": "starting_uptrend", "tier": "buy", "newsStatus": "clean", ... },
+    { "ticker": "MSFT", "price": 380.25, "pattern": "consolidation", "tier": "watch", "newsStatus": "clean", ... }
+  ]'
+```
+
+### Step 3: Mark Complete
+```bash
+curl -s -X POST http://localhost:3001/api/screenings/[SCREENING_ID]/complete \
+  -H "Content-Type: application/json" \
+  -d '{"totalResults": [NUMBER_OF_RESULTS]}'
+```
+
+### Pattern & Tier Values
+| Pattern | Value |
+|---------|-------|
+| Starting Uptrend | `starting_uptrend` |
+| Consolidation | `consolidation` |
+| Downtrend Reversal | `downtrend_reversal` |
+| Unknown | `unknown` |
+
+| Tier | Value | Criteria |
+|------|-------|----------|
+| BUY | `buy` | Strict criteria met |
+| WATCH | `watch` | Relaxed criteria met |
+| SKIP | `skip` | Failed criteria or red flag news |
+
+| News Status | Value |
+|-------------|-------|
+| Not checked | `pending` |
+| No issues | `clean` |
+| Red flags found | `red_flag` |
+
+### Result Fields Reference
+```json
+{
+  "ticker": "string (required)",
+  "price": "number",
+  "changePct": "number",
+  "volume": "number",
+  "avgVolume": "number",
+  "marketCap": "number",
+  "rsi": "number",
+  "sma20Pct": "number",
+  "sma50Pct": "number",
+  "sma200Pct": "number",
+  "high52wPct": "number",
+  "low52wPct": "number",
+  "beta": "number",
+  "atr": "number",
+  "instOwnPct": "number",
+  "instTransPct": "number",
+  "insiderOwnPct": "number",
+  "insiderTransPct": "number",
+  "shortFloatPct": "number",
+  "shortRatio": "number",
+  "profitMarginPct": "number",
+  "peRatio": "number",
+  "debtEquity": "number",
+  "dividendYield": "number",
+  "pattern": "starting_uptrend | consolidation | downtrend_reversal | unknown",
+  "tier": "buy | watch | skip",
+  "newsStatus": "pending | clean | red_flag",
+  "newsNotes": "string (optional, notes about news findings)"
+}
+```
+
+### Automated Workflow
+When running the screener, Claude should:
+1. Execute Steps 1-5 of the screening workflow
+2. Create a screening session via API
+3. Store all results with pattern, tier, and news status
+4. Mark screening as complete
+5. Results will be visible in the UI at http://localhost:5173/screenings

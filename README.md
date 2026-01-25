@@ -1,64 +1,94 @@
-# Trading Skill
+# Trading
 
-A [Claude Code](https://claude.ai/code) skill for stock market analysis and trading decisions.
+A stock market analysis and trading tool using Finviz Elite API.
 
-## Supported APIs
+## Features
 
-| API | Features | Status |
-|-----|----------|--------|
-| [Finviz Elite](https://finviz.com/elite.ashx) | Screening, quotes, SEC filings, news | ✅ Ready |
-| *More coming soon* | | |
+- Stock screening with customizable filters
+- Technical and fundamental analysis
+- Store screening results in database
+- Trading strategies (Swing Trade, SMC)
+- Web UI for managing screenings (in progress)
 
-## Installation
+## Quick Start
 
-### Personal (recommended)
+### Prerequisites
 
-```bash
-git clone git@github.com:xurshid29/trading-skill.git ~/.claude/skills/trading
-```
+- Node.js 25+
+- Docker (for PostgreSQL)
+- dbmate (`brew install dbmate`)
 
-### Project-level
-
-```bash
-git clone git@github.com:xurshid29/trading-skill.git .claude/skills/trading
-```
-
-## Setup
-
-Set API tokens as environment variables (add to `~/.zshrc` or `~/.bashrc`):
+### Setup
 
 ```bash
-# Finviz Elite
-export FINVIZ_API_TOKEN="your-token-here"
+# 1. Clone and install
+git clone <repo-url>
+cd trading
+npm install
+
+# 2. Configure environment
+cp .env.example .env
+# Edit .env with your FINVIZ_API_TOKEN
+
+# 3. Start database
+docker compose up -d
+
+# 4. Run migrations
+dbmate up
+
+# 5. Start development servers
+npm run dev:api   # API on http://localhost:3001
+npm run dev:web   # Web on http://localhost:5173
 ```
 
-## Usage
+## Project Structure
 
-Once installed, Claude will automatically use this skill when you ask:
+```
+trading/
+├── apps/
+│   ├── api/           # Express + TypeScript backend
+│   └── web/           # React + TypeScript frontend
+├── db/migrations/     # SQL migrations (dbmate)
+├── docs/              # API documentation
+└── strategies/        # Trading strategy templates
+```
 
-- "Screen for tech stocks with high dividends"
-- "Get price history for AAPL"
-- "Show SEC filings for MSFT"
-- "What's the latest market news?"
-- "Find oversold stocks in the S&P 500"
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Health check |
+| GET | `/api/screenings` | List screenings |
+| POST | `/api/screenings` | Create screening |
+| GET | `/api/screenings/:id` | Get screening with results |
+| POST | `/api/screenings/:id/results` | Add results |
+
+## Commands
+
+```bash
+# Development
+npm run dev:api        # Start API
+npm run dev:web        # Start frontend
+npm run dev            # Start both
+
+# Database
+docker compose up -d   # Start PostgreSQL
+dbmate up              # Run migrations
+dbmate status          # Check status
+```
+
+## Environment Variables
+
+```bash
+DATABASE_URL=postgres://app:app@localhost:5438/app?sslmode=disable
+FINVIZ_API_TOKEN=your-token-here
+```
 
 ## Documentation
 
-| File | Description |
-|------|-------------|
-| [SKILL.md](SKILL.md) | Skill definition (required by Claude Code) |
-| [docs/finviz-api.md](docs/finviz-api.md) | Finviz API reference |
-
-## Structure
-
-```
-├── SKILL.md              # Claude Code skill definition
-├── CLAUDE.md             # Project guidance for Claude
-├── docs/
-│   └── finviz-api.md     # Finviz API documentation
-└── resources/
-    └── finviz/           # Saved HTML references
-```
+- [CLAUDE.md](CLAUDE.md) - Full project documentation for Claude Code
+- [docs/finviz-api.md](docs/finviz-api.md) - Finviz API reference
+- [strategies/](strategies/) - Trading strategy templates
 
 ## License
 
