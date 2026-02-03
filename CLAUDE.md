@@ -157,6 +157,176 @@ curl -s -A "Mozilla/5.0" "https://elite.finviz.com/quote_export.ashx?t=AAPL&p=d&
 curl -s -A "Mozilla/5.0" "https://elite.finviz.com/news_export.ashx?v=3&t=AAPL&auth=$FINVIZ_API_TOKEN" | head -10
 ```
 
+### Finviz API - Reliable Fetch Patterns
+
+**Problem:** News and quote exports sometimes return empty on first call (timing/caching issue).
+
+**Solution:** For reliable fetches, use these patterns:
+
+```bash
+# Source env first
+source /path/to/trading/.env
+
+# NEWS - Full fetch (don't pipe, let it complete fully)
+curl -s -A "Mozilla/5.0" "https://elite.finviz.com/news_export.ashx?v=3&t=TICKER&auth=$FINVIZ_API_TOKEN"
+
+# QUOTES - Save to file then read (most reliable for large data)
+curl -s -A "Mozilla/5.0" "https://elite.finviz.com/quote_export.ashx?t=TICKER&p=d&auth=$FINVIZ_API_TOKEN" > /tmp/ticker_price.csv && tail -60 /tmp/ticker_price.csv
+
+# MULTIPLE TICKERS - Technical data
+curl -s -A "Mozilla/5.0" "https://elite.finviz.com/export.ashx?v=171&t=AAPL,MSFT,GOOGL&auth=$FINVIZ_API_TOKEN"
+
+# MULTIPLE TICKERS - Ownership data
+curl -s -A "Mozilla/5.0" "https://elite.finviz.com/export.ashx?v=131&t=AAPL,MSFT,GOOGL&auth=$FINVIZ_API_TOKEN"
+```
+
+**View Types for Screening:**
+| View | Code | Data Returned |
+|------|------|---------------|
+| Overview | v=111 | Ticker, company, sector, market cap, P/E, price, change, volume |
+| Technical | v=171 | Beta, ATR, SMA 20/50/200, 52W High/Low, RSI, price, change, volume |
+| Ownership | v=131 | Market cap, shares, insider/inst ownership & transactions, short float/ratio |
+| Financial | v=161 | P/E, EPS, profit margin, ROE, debt/equity, dividend yield |
+
+**If fetch returns empty:** Retry without piping to head/tail first, then pipe after confirming data returns.
+
+---
+
+## Single Stock Analysis Template
+
+When analyzing a single stock for demand/support zones and trade setups, follow this template:
+
+### 1. Current Stats Table
+```markdown
+| Metric | Value |
+|--------|-------|
+| **Price** | $XX.XX (+/-X.XX%) |
+| **Market Cap** | $X.XB |
+| **RSI** | XX.XX (oversold <30 / neutral 30-70 / overbought >70) |
+| **Beta** | X.XX (volatility vs market) |
+| **vs 52W High** | -XX.XX% |
+| **vs 52W Low** | +XX.XX% |
+| **Short Float** | XX.XX% (>20% = high risk, <5% = low risk) |
+| **Inst Trans** | +/-XX.XX% (positive = buying, negative = selling) |
+| **Insider Trans** | +/-XX.XX% (positive = buying, negative = selling) |
+```
+
+### 2. Technical Position Table
+```markdown
+| SMA | vs Price | Trend |
+|-----|----------|-------|
+| 20 SMA | +/-X.XX% | Bullish/Bearish |
+| 50 SMA | +/-X.XX% | Bullish/Bearish |
+| 200 SMA | +/-X.XX% | Bullish/Bearish |
+```
+
+### 3. Price Structure (ASCII Chart)
+Show key levels with current price position:
+```
+$XX.XX ─── 52W High / Resistance
+$XX.XX ─── Resistance level
+$XX.XX ─── Current price ◀ CURRENT
+$XX.XX ─── Support level
+$XX.XX ─── Demand zone
+$XX.XX ─── 52W Low
+```
+
+### 4. Key Support & Demand Zones
+
+**Support Zones** (price levels where buying pressure historically appears):
+| Zone | Strength | Note |
+|------|----------|------|
+| $XX.XX-XX.XX | Strong/Medium/Weak | Description (e.g., "Jan 30 low") |
+
+**Demand Zones** (areas of significant accumulation, typically after consolidation):
+| Zone | Strength | Note |
+|------|----------|------|
+| $XX.XX-XX.XX | Strong/Medium/Weak | Description (e.g., "Nov base before rally") |
+
+**How to Identify Zones from Price History:**
+- **Support:** Look for lows that were tested multiple times and held
+- **Demand:** Look for consolidation areas before significant rallies (accumulation)
+- **Strength:** More tests + longer consolidation = stronger zone
+
+### 5. Key Price Action Table
+```markdown
+| Date | Low | High | Close | Note |
+|------|-----|------|-------|------|
+| Date | $XX.XX | $XX.XX | $XX.XX | Description |
+```
+
+### 6. Catalysts Section
+```markdown
+| Catalyst | Detail |
+|----------|--------|
+| **Catalyst Name** | Brief description |
+```
+
+### 7. Concerns & Positives
+```markdown
+### Concerns
+| Issue | Detail |
+|-------|--------|
+| Issue name | Description |
+
+### Positives
+| Factor | Detail |
+|--------|--------|
+| Factor name | Description |
+```
+
+### 8. Trade Setup Table
+```markdown
+| Scenario | Entry | Stop | Target | R/R |
+|----------|-------|------|--------|-----|
+| **Aggressive** | $XX.XX-XX.XX | $XX.XX (-X%) | $XX.XX (+X%) | X:1 |
+| **Moderate** | $XX.XX-XX.XX | $XX.XX | $XX.XX (+X%) | X:1 |
+| **Conservative** | $XX.XX-XX.XX | $XX.XX | $XX.XX (+X%) | X:1 |
+```
+
+### 9. Verdict
+Summarize:
+- Overall bias (bullish/bearish/neutral)
+- Best entry zone
+- Key risks
+- Recommendation (BUY/WATCH/SKIP)
+
+---
+
+## Key Metrics Interpretation
+
+### RSI (Relative Strength Index)
+| RSI Range | Interpretation |
+|-----------|----------------|
+| < 30 | Oversold - potential bounce |
+| 30-50 | Neutral-bearish |
+| 50-70 | Neutral-bullish |
+| > 70 | Overbought - potential pullback |
+
+### Short Float Risk Levels
+| Short Float | Risk Level | Note |
+|-------------|------------|------|
+| < 5% | Low | Minimal short pressure |
+| 5-15% | Medium | Normal range |
+| 15-25% | High | Significant short interest |
+| > 25% | Very High | Squeeze potential but also high downside risk |
+
+### Institutional/Insider Activity
+| Activity | Interpretation |
+|----------|----------------|
+| Inst Trans > +5% | Institutions accumulating (bullish) |
+| Inst Trans < -5% | Institutions distributing (bearish) |
+| Insider Trans > 0 | Insiders buying (very bullish) |
+| Insider Trans < -10% | Heavy insider selling (red flag) |
+
+### Beta Interpretation
+| Beta | Volatility |
+|------|------------|
+| < 1.0 | Less volatile than market |
+| 1.0-2.0 | Normal volatility |
+| 2.0-4.0 | High volatility |
+| > 4.0 | Extreme volatility (risky) |
+
 ## Trading Strategies
 
 | Strategy | When to Use | Command |
