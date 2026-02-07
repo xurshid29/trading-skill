@@ -386,11 +386,33 @@ If (short report detected) AND (S-3 capital:revenue > 10:1):
     → CRITICAL: Immediate SKIP
 ```
 
+### "Powder Keg" Detection (Pre-Attack Profile)
+
+Some stocks haven't been hit by a short report yet but have the exact profile that attracts one. Identifying these early can save you from being caught in the blast.
+
+**A stock is a "Powder Keg" when 3+ of these conditions are true:**
+
+| Condition | What It Signals |
+|-----------|----------------|
+| Short float > 20% | Shorts already building large positions |
+| Insider selling by all/most insiders | Universal lack of insider confidence |
+| Zero insider purchases in 12+ months | No insider willing to buy at any price |
+| P/S ratio > 30x or P/E negative | Easy overvaluation narrative for short report |
+| Revenue < operating expenses | "Cash burn" attack angle |
+| Recent S-3 or large equity raise | Dilution ammunition |
+| Stock near or recently at 52W high | Maximum damage potential from peak |
+
+**When you identify a Powder Keg:**
+- Do NOT assign BUY tier regardless of other technicals
+- Assign WATCH at best, with watchReason noting the powder keg profile
+- Monitor weekly for short-seller firm mentions in news
+- If any short report surfaces → immediately SKIP
+
 ---
 
 ## Real-World Case Studies
 
-### Case Study 1: ONDS (Ondas Holdings) - The Full Pattern
+### Case Study 1: ONDS (Ondas Holdings) - The "Short & Distort" Full Pattern
 
 **Timeline:**
 ```
@@ -399,8 +421,10 @@ Dec 12: Ron Stern resigns from board                  → Stock -12%
 Dec 19: Stern files to sell remaining 750K shares
 Dec 22: 4 more insiders sell (directors + CFO)        → Stock -5%
 Dec 31: CEO Brock sells 475K shares ($4.6M)
-Feb 4:  JCapital short report drops                   → Stock -15%
-Feb 5:  Continued selling                             → Stock -11%
+Jan 28: S-3 shelf registration for $1B announced
+Feb 3:  Asia-Pacific defense contract + Rotron Aero acquisition announced (positive news)
+Feb 4:  JCapital short report drops INTO the good news → Stock -15%
+Feb 5:  Continued selling, 79M volume               → Stock -11%
          10-day total:                                → Stock -33%
 ```
 
@@ -410,27 +434,101 @@ Feb 5:  Continued selling                             → Stock -11%
 - Dilution: CRITICAL - $829M raised vs $7.2M revenue (115:1 ratio)
 - Compound risk: EXTREME
 
-**Lesson:** Each event amplified the next. Insider selling eroded trust → short report landed on fertile ground → dilution fears prevented recovery.
+**The Short & Distort Tactic (how JCapital executed):**
 
-### Case Study 2: APLD (Applied Digital) - Persistent Selling
+Short sellers often employ a calculated tactical strike:
 
-**Timeline:**
+1. **Wait for Peak Hype** — ONDS had rallied ~400% and just announced defense contracts. Sentiment was high, providing liquidity to short into.
+2. **Time the Release** — Report dropped the day after good news, flipping the narrative from "Growth Company" to "Dilution Machine."
+3. **Weaponize Insider Selling** — JCapital used CEO's $4.6M Dec 31 sale as "proof" that management doesn't believe in the stock. The prior insider selling (Stern's $13.5M + resignation) had already eroded trust.
+4. **Highlight Verifiable Red Flags** — The $829M raised vs $7.2M revenue (115:1 ratio) is factual, not fabrication. The best short reports use real data.
+
+**What typically happens after a short report:**
+
+| Phase | Timeframe | What to Watch |
+|-------|-----------|---------------|
+| Impact | Day 1-3 | Sharp drop 15-30%, high volume |
+| Rebuttal window | Day 2-5 | Does company issue detailed point-by-point response? |
+| Battleground | Day 3-10 | Stock volatile as bulls vs. shorts fight |
+| Resolution | Week 2-4 | Either recovery (if rebuttal credible) or continued decline |
+
+**Key indicators for resolution:**
+- Company issues strong rebuttal with data → credibility score drops, potential bounce
+- Insider BUYING appears after the dip → strongest recovery signal
+- Company stays silent or gives weak denial → confirms thesis, more downside
+- Additional short firms pile on → accelerates decline
+
+**Lesson:** Each event amplified the next. Insider selling eroded trust → short report landed on fertile ground → dilution fears prevented recovery. The timing into positive news was deliberate — short sellers use liquidity from buyers to establish positions, then release the report to crash the price and cover cheaper.
+
+### Case Study 2: APLD (Applied Digital) - The "Powder Keg" Pattern
+
+A stock with all the preconditions for a short attack but no report has dropped yet. This is what a pre-attack profile looks like.
+
+**Insider Selling Timeline:**
 ```
+May 2025: Directors sell at $6.50-7.00 ($288K)
 Aug 2025: 5 insiders sell ($2.4M) at $12-15
-Sep 2025: CEO + CFO sell ($7.2M) at $15
+Sep 2025: CEO + CFO + director sell ($7.2M) at $15
 Oct 2025: 6 insiders sell ($12.9M) at $33-35 - CFO sells 53% of holdings
-Jan 2026: 4 insiders sell ($9.0M) at $35-39 near 52W high
+Nov 2025: 3 directors sell ($415K) at $23-27
+Jan 2026: CEO sells $6M, 3 directors sell ($3M) near 52W high
+Jan 29:  Director Hastings sells at $38.57 (day after 52W high of $42.27)
          Zero insider purchases in 12 months
-         Total: $31M across 23 transactions
+         Total: ~$31M across 23+ transactions
 ```
+
+**Why APLD is a short-seller target (Powder Keg Profile):**
+
+| Factor | APLD Value | Target Threshold |
+|--------|-----------|-----------------|
+| Short float | 27-31% | >25% = shorts already positioned |
+| P/S ratio | 72.5x | Extreme overvaluation narrative |
+| Profitable? | No (-$0.11 EPS) | Easy to attack fundamentals |
+| Insider selling | $31M, all insiders, zero buying | "If insiders don't believe, why should you?" |
+| Revenue growth | +250% YoY | Counter-narrative for bulls |
+| Analyst sentiment | 10/12 Strong Buy, $48.82 target | Creates tension with short thesis |
 
 **Scores:**
 - Insider risk: 11+ (CRITICAL) - all insiders selling, CFO 53% liquidation, clustered waves
-- Short report: None detected
-- Dilution: None detected
-- Impact: 5-11% drops on each Form 4 disclosure cluster
+- Short report: None yet - but profile matches typical targets
+- Short interest: 27-31% float (VERY HIGH - most shorted tech stock in Dec 2025)
+- Dilution: None detected (no S-3 filed)
+- Impact so far: 5-11% drops on each Form 4 disclosure cluster
 
-**Lesson:** Even without a short report, persistent broad-based insider selling creates a "death by a thousand cuts" pattern. Every Form 4 filing triggers a selloff.
+**Feb 2026 price action:**
+- Peaked at $42.27 on Jan 28 (52W high)
+- Director Hastings sells at $38.57 on Jan 29 → stock -11%
+- Qualcomm weak outlook + AI spending fears → sector drag
+- Down to ~$28.91 by Feb 5 → worst day in a year
+- Down 12.8% since last earnings report
+
+**The squeeze vs. report dynamic:**
+
+Unlike ONDS, APLD has a two-sided risk profile:
+
+| Scenario | Trigger | Expected Impact |
+|----------|---------|-----------------|
+| **Bear: Short report drops** | Credible firm publishes on valuation + insider selling | -20% to -40% (ONDS pattern) |
+| **Bull: Short squeeze** | Revenue beats + new contracts → shorts forced to cover 80M shares | +30% to +50% rally |
+| **Neutral: Slow bleed** | No catalyst, continued insider selling, each Form 4 = -5% | Gradual decline to $20-25 |
+
+**Lesson:** APLD shows that a stock can have CRITICAL insider risk without a short report and still suffer "death by a thousand cuts." But the 27-31% short float creates explosive potential in both directions. Monitor for: (1) any short-seller firm mentioning APLD, (2) any insider purchases (strongest reversal signal), (3) next earnings report as catalyst for squeeze or breakdown.
+
+### Case Study Comparison: ONDS vs APLD
+
+| Factor | ONDS (attacked) | APLD (vulnerable) |
+|--------|-----------------|-------------------|
+| Short report | JCapital (published Feb 4) | None yet |
+| Insider selling total | $19M in 5 weeks | $31M over 9 months |
+| Sell-then-resign | Yes (Ron Stern) | No |
+| Revenue vs capital raised | 115:1 (CRITICAL) | N/A (no S-3 filed) |
+| Revenue growth | Minimal ($7.2M) | +250% YoY ($126.6M) |
+| Analyst sentiment | Mixed | 10/12 Strong Buy |
+| Short float | Lower | 27-31% (much higher) |
+| P/S ratio | High | 72.5x (extreme) |
+| Profitable | No | No |
+| Post-event outcome | -33% in 10 days | -30% from peak (ongoing) |
+| **Key differentiator** | Dilution killed it | Revenue growth may save it |
 
 ---
 
