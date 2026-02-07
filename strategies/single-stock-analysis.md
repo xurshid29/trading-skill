@@ -70,10 +70,23 @@ https://www.benzinga.com/quote/TICKER/news
 ```
 Use WebFetch tool to retrieve and analyze news headlines from Benzinga.
 
-### Step 6: SEC Filings (Optional)
+### Step 6: SEC Filings & Insider Activity (Recommended)
 ```bash
-curl -s "https://elite.finviz.com/export/latest-filings?t=TICKER&o=-filingDate&auth=$FINVIZ_API_TOKEN" | head -10
+curl -s -A "Mozilla/5.0" "https://elite.finviz.com/export/latest-filings?t=TICKER&o=-filingDate&auth=$FINVIZ_API_TOKEN" | head -15
 ```
+
+**Analyze filings for:**
+- **Form 4** (insider ownership changes): Count occurrences in last 90 days, note who filed
+- **Form 144** (intent to sell): Any C-suite filing = flag
+- **S-3/S-3A** (shelf registration): Note amount, compare to revenue
+- **8-K** (material events): Check descriptions for concerning items
+
+**If insider_trans_pct < -3% or Form 4 clusters detected:**
+Run full analysis per [Insider & Short Monitor](insider-short-report-monitor.md) scoring system.
+
+For deeper Form 4 details, use WebFetch on:
+- `https://openinsider.com/screener?s=TICKER` (insider transaction summary)
+- `https://www.secform4.com/insider-trading/TICKER.htm` (detailed filings)
 
 ---
 
@@ -113,6 +126,10 @@ curl -s "https://elite.finviz.com/export/latest-filings?t=TICKER&o=-filingDate&a
 - [ ] No major management changes
 - [ ] No product recalls or legal issues
 - [ ] No guidance cuts
+- [ ] No short-seller reports from known activist firms
+- [ ] No clustered insider selling (3+ Form 4s in 90 days)
+- [ ] No Form 144 filed by C-suite executives
+- [ ] No S-3 shelf registration with high capital:revenue ratio
 
 ### Green Flags (Bonus)
 - [ ] Recent analyst upgrades
@@ -182,6 +199,10 @@ Any of these:
 - Profit Margin negative (unprofitable)
 - P/E > 100 (extremely overvalued)
 - Debt/Equity > 3 (heavily indebted)
+- Active short-seller report from credible firm (credibility score 4+)
+- Insider selling risk score 7+ (see [insider-short-report-monitor.md](insider-short-report-monitor.md))
+- Compound risk: insider selling + short report or S-3 dilution
+- S-3 with capital:revenue ratio > 10:1
 
 ---
 

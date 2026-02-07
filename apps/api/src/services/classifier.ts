@@ -29,6 +29,16 @@ const RED_FLAG_KEYWORDS = [
   // Business concerns
   'recall', 'warning', 'guidance cut', 'lowered outlook', 'miss',
   'bankruptcy', 'default', 'restructuring',
+  // Short-seller reports
+  'short seller', 'short report', 'activist short',
+  'hindenburg', 'muddy waters', 'citron research', 'jcapital',
+  'grizzly research', 'kerrisdale', 'scorpion capital', 'blue orca',
+  'spruce point', 'wolfpack',
+  // Insider selling concerns
+  'insider sell', 'insider dump', 'insider unload',
+  // Dilution
+  'shelf registration', 'secondary offering', 'stock offering',
+  'dilution', 'share issuance', 'equity raise',
 ];
 
 // Keywords that suggest earnings proximity

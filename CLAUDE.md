@@ -317,7 +317,11 @@ Summarize:
 | Inst Trans > +5% | Institutions accumulating (bullish) |
 | Inst Trans < -5% | Institutions distributing (bearish) |
 | Insider Trans > 0 | Insiders buying (very bullish) |
-| Insider Trans < -10% | Heavy insider selling (red flag) |
+| Insider Trans -3% to 0 | Minimal selling, not alarming |
+| Insider Trans -3% to -10% | Moderate selling -- run `insider check TICKER` |
+| Insider Trans < -10% | Heavy insider selling (red flag -- run full insider analysis) |
+
+**When Insider Trans < -3%:** Run `insider check TICKER` for Form 4 analysis, severity scoring, and short-seller report scan. See [Insider & Short Monitor](strategies/insider-short-report-monitor.md).
 
 ### Beta Interpretation
 | Beta | Volatility |
@@ -334,6 +338,7 @@ Summarize:
 | [Swing Trade Screener](strategies/swing-trade-screener.md) | Find candidates across price ranges | "run swing screener" |
 | [Single Stock Analysis](strategies/single-stock-analysis.md) | Evaluate specific stock | "analyze AAPL" |
 | [SMC Analysis](strategies/smc-single-stock-analysis.md) | Precise entry timing | "SMC analyze AAPL" |
+| [Insider & Short Monitor](strategies/insider-short-report-monitor.md) | Check insider selling & short-seller risk | "insider check AAPL" |
 
 ### Screening Workflow with Database
 

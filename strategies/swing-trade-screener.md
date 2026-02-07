@@ -30,6 +30,8 @@ This screener finds **WHAT** to buy. For **WHEN** to enter, use SMC analysis on 
 │  │    ↓                                                    │   │
 │  │ Step 4: News Check (removes red flags)                  │   │
 │  │    ↓                                                    │   │
+│  │ Step 4.5: Insider & Short Report Screen (if flagged)    │   │
+│  │    ↓                                                    │   │
 │  │ Step 5: Final Selection (9-12 picks)                    │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                           ↓                                     │
@@ -87,6 +89,10 @@ Looking for stocks that are:
 - ✅ No earnings within 2-3 days
 - ✅ No pending SEC investigations
 - ✅ Low to moderate beta (< 1.5 preferred)
+- ✅ No active short-seller reports from known firms
+- ✅ No clustered insider selling (3+ insiders in 30 days)
+- ✅ No CEO/CFO selling >20% of holdings
+- ✅ No S-3 with capital:revenue ratio >10:1
 
 ---
 
@@ -232,6 +238,10 @@ Use WebFetch tool to retrieve and analyze news headlines from Benzinga (one tick
 - Major management changes
 - Guidance cuts
 - Product recalls / Legal issues
+- Short-seller reports from known firms (Hindenburg, Muddy Waters, JCapital, Citron, etc.)
+- Clustered insider selling (3+ Form 4 filings in 30 days)
+- CEO/CFO selling >20% of holdings
+- S-3 shelf registration with capital:revenue ratio >10:1
 
 **Green Flags:**
 - Analyst upgrades
@@ -239,6 +249,40 @@ Use WebFetch tool to retrieve and analyze news headlines from Benzinga (one tick
 - Acquisitions / Expansion news
 - Insider buying
 - Industry tailwinds
+
+### Step 4.5: Insider & Short Report Quick Screen
+
+**Triggered for:** Any ticker where `insider_trans_pct < -3%` OR `short_float_pct > 10%` from Step 3 ownership data.
+
+**If no tickers are flagged:** Skip this step entirely.
+
+```bash
+# Fetch SEC filings for flagged tickers only
+source .env
+for ticker in FLAGGED_TICK1 FLAGGED_TICK2; do
+  echo "=== $ticker SEC Filings ===" && \
+  curl -s -A "Mozilla/5.0" "https://elite.finviz.com/export/latest-filings?t=$ticker&o=-filingDate&auth=$FINVIZ_API_TOKEN" | head -15
+  sleep 1
+done
+```
+
+**Quick checks (per flagged ticker):**
+
+| Check | Source | Red Flag Threshold |
+|-------|--------|--------------------|
+| Form 4 clusters | SEC filings | 3+ Form 4s in 30 days |
+| CEO/CFO selling | SEC filings | Any Form 4 sale from C-suite |
+| Form 144 | SEC filings | Filed by any insider |
+| S-3 filed | SEC filings | Any S-3/S-3A in last 6 months |
+| Short-seller report | News headlines | Mentions of known short firms |
+
+**Action based on findings:**
+- **No flags found:** Proceed to Step 5
+- **Yellow flags only (risk score 1-3):** Keep current tier, note in newsNotes
+- **Moderate risk (score 4-6):** Downgrade to WATCH, add watchReason
+- **High risk (score 7+):** Downgrade to SKIP
+
+See [Insider & Short Monitor](insider-short-report-monitor.md) for full scoring system and deep dive analysis.
 
 ### Step 5: Final Selection (Minimum 9 Picks)
 
