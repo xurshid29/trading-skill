@@ -26,7 +26,7 @@ Use this template when you have a specific ticker and want to evaluate it for a 
 | P/E Ratio | < 50 (not overvalued) | |
 | Debt/Equity | < 2 (not overleveraged) | |
 | Breaking News | None negative | |
-| Earnings | Not within 3 days | |
+| Earnings | Not within 5-7 days | |
 
 ---
 
@@ -122,7 +122,7 @@ For deeper Form 4 details, use WebFetch on:
 ### News & Events
 - [ ] No analyst downgrades in past week
 - [ ] No SEC investigations or law firm notices
-- [ ] No earnings announcement within 3 days
+- [ ] No earnings announcement within 5-7 days
 - [ ] No major management changes
 - [ ] No product recalls or legal issues
 - [ ] No guidance cuts
@@ -194,7 +194,7 @@ Any of these:
 - Short ratio > 5 days (squeeze risk)
 - Insider transactions heavily negative
 - Negative breaking news
-- Earnings within 3 days
+- Earnings within 5-7 days
 - Beta > 2.0
 - Profit Margin negative (unprofitable)
 - P/E > 100 (extremely overvalued)
@@ -213,16 +213,21 @@ If decision is **BUY**:
 | Parameter | Value |
 |-----------|-------|
 | Entry | Current price or limit near support |
-| Stop Loss | 1.5-2× ATR below entry (or 2-3% if ATR unavailable) |
-| Target 1 | 5% above entry |
-| Target 2 | 8% above entry |
-| Hold Time | 2-3 days max |
+| Stop Loss | 1.5-2× ATR below entry (or 3-5% if ATR unavailable) |
+| Target 1 | 8-12% above entry (sell 50%, move stop to breakeven) |
+| Target 2 | 15-20% or next resistance (sell remaining) |
+| Hold Time | 5-10 days (behavior-based exit — hold while setup is working) |
 | Position Size | Max 10% of portfolio |
 
 **ATR-Based Stop Loss Example:**
 - If ATR = $0.50 and entry = $25.00
 - Stop = $25.00 - (1.5 × $0.50) = $24.25
 - This adapts to the stock's actual volatility
+
+**Behavior-Based Exit:**
+- Exit when price closes below SMA20 on daily chart
+- Exit on volume divergence (price up but volume fading)
+- Hold as long as price holds above SMA20 with healthy RSI (50-70)
 
 ---
 
@@ -257,7 +262,7 @@ If decision is **BUY**:
 
 ### News Check
 - [✅/❌] No negative breaking news
-- [✅/❌] No earnings within 3 days
+- [✅/❌] No earnings within 5-7 days
 - [✅/❌] No analyst downgrades
 - [✅/❌] No legal/SEC issues
 

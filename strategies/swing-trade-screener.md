@@ -5,7 +5,7 @@
 | Parameter | Value |
 |-----------|-------|
 | **Position** | Long only |
-| **Hold Time** | 2-3 days |
+| **Hold Time** | 5-10 days (behavior-based exit, not time-based) |
 | **Timeframe** | 4H - 1D |
 | **Final Output** | Minimum 9 picks by pattern |
 
@@ -86,7 +86,7 @@ Looking for stocks that are:
 
 ### Safety Checks
 - ✅ No breaking news that could invalidate technicals
-- ✅ No earnings within 2-3 days
+- ✅ No earnings within 5-7 days
 - ✅ No pending SEC investigations
 - ✅ Low to moderate beta (< 1.5 preferred)
 - ✅ No active short-seller reports from known firms
@@ -234,7 +234,7 @@ Use WebFetch tool to retrieve and analyze news headlines from Benzinga (one tick
 **Red Flags to Avoid:**
 - Analyst downgrades
 - SEC investigations / Law firm notices
-- Earnings within 2-3 days
+- Earnings within 5-7 days
 - Major management changes
 - Guidance cuts
 - Product recalls / Legal issues
@@ -297,7 +297,7 @@ See [Insider & Short Monitor](insider-short-report-monitor.md) for full scoring 
 **BUY Criteria (strict):**
 - Beta <1.5, Short Ratio <5, Short Float <10%
 - Insider Trans not negative
-- News clear, no earnings within 3 days
+- News clear, no earnings within 5-7 days
 
 **WATCH Criteria (relaxed):**
 - Beta <2.0, Short Ratio <7, Short Float <15%
@@ -386,8 +386,9 @@ See [Insider & Short Monitor](insider-short-report-monitor.md) for full scoring 
 
 | Rule | Value |
 |------|-------|
-| Stop Loss | 1.5-2× ATR below entry (or 2-3% if ATR unavailable) |
-| Take Profit | 5-8% above entry |
+| Stop Loss | 1.5-2× ATR below entry (or 3-5% if ATR unavailable) |
+| Take Profit T1 | 8-12% above entry (sell 50%, move stop to breakeven) |
+| Take Profit T2 | 15-20% or next resistance level (sell remaining) |
 | Risk/Reward | Minimum 2:1 |
 | Position Size | Max 10% of portfolio per trade |
 | Max Positions | 3-4 concurrent |
@@ -395,6 +396,29 @@ See [Insider & Short Monitor](insider-short-report-monitor.md) for full scoring 
 **ATR-Based Stop Loss:**
 Using ATR adapts your stop to the stock's actual volatility.
 - Example: ATR = $0.50, Entry = $25.00 → Stop = $24.25 (1.5× ATR)
+
+### Behavior-Based Exit Rules
+
+Hold as long as the setup is working. Exit when the stock tells you to, not on a fixed day count.
+
+**Exit signals (sell):**
+- Price closes below SMA20 on daily chart (trend broken)
+- Price closes below your trailing stop (1.5-2× ATR)
+- RSI divergence: price makes new high but RSI doesn't (momentum fading)
+- Volume dries up on rally (no conviction)
+- Breaking news red flag (insider selling, short report, earnings warning)
+
+**Hold signals (keep position):**
+- Price above SMA20 and making higher lows
+- Volume confirms direction (up days have higher volume)
+- RSI between 50-70 (healthy momentum)
+- No negative catalysts in news
+
+**Trailing stop progression:**
+1. **Entry:** Stop at 1.5-2× ATR below entry
+2. **After +5%:** Move stop to breakeven
+3. **After T1 hit (+8-12%):** Sell 50%, trail stop at SMA20 or 2× ATR below current price
+4. **Remaining 50%:** Trail stop daily, exit on close below SMA20 or T2 hit
 
 ---
 
@@ -435,7 +459,7 @@ Using ATR adapts your stop to the stock's actual volatility.
 
 ### News Check
 - [ ] No negative breaking news
-- [ ] No earnings in next 3 days
+- [ ] No earnings in next 5-7 days
 - [ ] No analyst downgrades
 - [ ] No legal/SEC issues
 
@@ -543,7 +567,7 @@ curl -s -X POST http://localhost:3001/api/screenings/[SCREENING_ID]/complete \
 **WATCH tier watchReason examples:**
 - "Minor insider selling (-1.4%). Wait for insider activity to stabilize."
 - "Higher beta (1.31). Wait for market volatility to decrease."
-- "Earnings in 3 days. Wait for post-earnings clarity."
+- "Earnings in 5-7 days. Wait for post-earnings clarity."
 - "Short ratio elevated (6.5 days). Monitor for squeeze risk."
 
 | News Status | Value |
